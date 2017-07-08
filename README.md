@@ -17,9 +17,13 @@
 - request 
 
 > name : String
+
 > email : String
+
 > password : String
-> age : String 
+
+> age : String
+ 
 > sex : String
 
 - response
@@ -28,7 +32,8 @@
 
 ### /auth/userLogin
 - request
-> email : String                                                                                                  
+> email : String
+                                                                                                  
 > password : String
 
 - response
