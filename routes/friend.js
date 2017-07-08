@@ -1,8 +1,8 @@
-module.exports = friends;
+module.exports = friend;
 
-function friends(app,userModel){
+function friend(app,userModel){
     
-    app.post('/friendsSave',(req,res)=>{
+    app.post('/friends/friendsSave',(req,res)=>{
         var token = req.body.token;
         var friends = req.body.friends;
 
@@ -24,7 +24,7 @@ function friends(app,userModel){
 
     });
 
-    app.get('/friendsList',(err,model)=>{
+    app.get('/friends/friendsList',(err,model)=>{
         if(err) console.log(err);
         else{
             var token = req.query.token;
@@ -38,4 +38,15 @@ function friends(app,userModel){
         }
     }); 
 
+    app.get('/friends/friendsData',(req,res)=>{
+        var name = req.query.name;
+
+        userModel.find({"name":name},(err,model)=>{
+            if(err) console.log(err);
+            else{
+                res.send(model); 
+            }
+        });
+    });
 }
+

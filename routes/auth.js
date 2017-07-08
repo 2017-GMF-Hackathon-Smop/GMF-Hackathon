@@ -1,7 +1,7 @@
-moduel.exports = auth;
+module.exports = auth;
 
 function auth(app , userModel,randomstring){
-    app.post('/userSignup',(req,res)=>{
+    app.post('/auth/userSignup',(req,res)=>{
         var name = req.body.name;
         var age = req.body.name;
         var password = req.body.password;
@@ -19,7 +19,7 @@ function auth(app , userModel,randomstring){
         });
     });
 
-    app.post('/userLogin',(req,res)=>{
+    app.post('/auth/userLogin',(req,res)=>{
         var email = req.body.email;
         var password = req.body.password;
         

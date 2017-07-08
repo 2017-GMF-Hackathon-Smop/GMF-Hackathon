@@ -44,6 +44,25 @@ app.use(function(req, res, next) {
   next(err);
 });
 
+passport.use(new FacebookStrategy({
+    clientID: '744770849038667',
+    clientSecret: '497d7c991ba3c0797627c1714032da56',
+    callbackURL: 'wonjun.kr/facebookAuth/callback',
+    passReqToCallback: true,
+  }, (req, accessToken, refreshToken, profile, done) => {
+      User.findOne({ id: profile.id }, (err, user) => {
+            if (user) {
+                    return done(err, user);
+                  } // 회원 정보가 있으면 로그인
+            const newUser = new User({ // 없으면 회원 생성
+                    id: profile.id
+                  });
+            newUser.save((user) => {
+                    return done(null, user); // 새로운 회원 생성 후 로그인
+                  });
+          });
+    }))
+
 var user = mongoose.Schema({
     email:String,
     password:String,
@@ -54,11 +73,37 @@ var user = mongoose.Schema({
     friend:Array
 }); 
 
+var userGraph = mongoose.Schema({
+    graph:Array,
+    token:String
+});
+
+var allGraph = mongoose.Schema({
+    graph:Array
+});
+
+var time = mongoose.Schema({
+    token:String,
+    time:String
+});
+
+var smoke = mongoose.Schema({
+    smoke:String,
+    token:String
+});
+
 var userModel = mongoose.model('userModel',user);
+var graphModel = mongoose.model('graphModel',userGraph);
+var allModel = mongoose.model('allModel',allGraph);
+var timeModel = mongoose.model('timeModel',time);
+var smokeModel = mongoose.model('smokeModel',smoke);
 
-require('/auth')(app,userModel,randomstring);
-require('/friends')(app,userModel);
-
+require('./routes/auth')(app,userModel,randomstring);
+require('./routes/friend')(app,userModel);
+require('./routes/graph')(app,userModel,graphModel,allModel);
+require('./routes/facebookAuth')(app,userModel,passport);
+require('./routes/time')(app,userModel,timeModel);
+require('./routes/smoke')(app,smokeModel);
 
 // error handler
 app.use(function(err, req, res, next) {
